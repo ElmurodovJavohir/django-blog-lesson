@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 User = get_user_model()
@@ -20,6 +21,13 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        return reverse('post-detail', args=[str(self.id)])
+
+    def get_category_names(self):
+        categories = self.category.all().values_list('title', flat=True)
+        return " . ".join(categories)
 
 
 class Comment(models.Model):
